@@ -12,11 +12,20 @@ db_key: str = config("SUPABASE_KEY")
 
 supabase: Client = create_client(db_url, db_key)
 
+# get products by category
+def dataGetProductsByCategory(category_id):
+    response = (supabase.table("product")
+                .select("*,category(id,name)")
+                .eq('category_id', category_id)
+                .order("title", desc=False)
+                .execute()
+    )
+    return response.data
 
 # get all products
 def dataGetProducts():
     response = (supabase.table("product")
-                .select("*")
+                .select("*,category(id,name)")
                 .order("title", desc=False)
                 .execute()
     )
